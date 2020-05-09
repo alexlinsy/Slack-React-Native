@@ -10,6 +10,8 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 
 import {NavigationContainer} from '@react-navigation/native';
 
+import ChannelList from './src/components/ChannelList';
+
 const ChannelScreen = ({navigation, route}) => (
   <SafeAreaView>
       <Text>Channel Screen</Text>
@@ -18,7 +20,7 @@ const ChannelScreen = ({navigation, route}) => (
 
 const ChannelListDrawer = (props) => (
   <SafeAreaView>
-    <Text>Drawer</Text>
+    <ChannelList />
   </SafeAreaView>
 );
 
