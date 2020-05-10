@@ -5,10 +5,20 @@ import {
   View,
   Text,
 } from 'react-native';
-
 import {createDrawerNavigator} from '@react-navigation/drawer';
-
 import {NavigationContainer} from '@react-navigation/native';
+import ChannelList from './src/components/ChannelList';
+import {StreamChat} from 'stream-chat';
+
+const chatClient = new StreamChat('q95x9hkbyd6p');
+const userToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidmlzaGFsIn0.LpDqH6U8V8Qg9sqGjz0bMQvOfWrWKAjPKqeODYM0Elk';
+const user = {
+  id: 'vishal',
+  name: 'Vishal',
+};
+
+chatClient.setUser(user, userToken);
+
 
 const ChannelScreen = ({navigation, route}) => (
   <SafeAreaView>
@@ -16,10 +26,15 @@ const ChannelScreen = ({navigation, route}) => (
     </SafeAreaView>
 );
 
-const ChannelListDrawer = (props) => (
-  <SafeAreaView>
-    <Text>Drawer</Text>
-  </SafeAreaView>
+const ChannelListDrawer = props => (
+  <ChannelList 
+    client={chatClient}
+    changeChannel={channelId => {
+      props.navigation.jumpTo('ChannelScreen', {
+        channelId
+      });
+    }}
+  />
 );
 
 const Drawer = createDrawerNavigator();
