@@ -4,15 +4,15 @@ export const useWatchedChannels = (client, changeChannel) => {
     const [activeChannelId, setActiveChannelId] = useState(null);
     const [unreadChannels, setUnreadChannels] = useState([]);
     const [readChannels, setReadChannels] = useState([]);
-    const [oneOnOneConversations, setOneOnOneConversations] = useState(true);
+    const [oneOnOneConversations, setOneOnOneConversations] = useState([]);
     const [hasMoreChannels, setHasMoreChannels] = useState(true);
     
     const filters={
       type: 'messaging',
       example: 'slack-demo',
       members: {
-        $in: [client.user.id]
-      }
+        $in: [client.user.id],
+      },
     };
   
     const sort = {has_unread: -1, cid: -1};
@@ -35,7 +35,7 @@ export const useWatchedChannels = (client, changeChannel) => {
         });
   
         offset = offset + channels.length;
-        channels.forEacch(c => {
+        channels.forEach(c => {
           if(c.countUnread() > 0) {
             _unreadChannels.push(c);
           } else if(Object.keys(c.state.members).length === 2) {
@@ -47,7 +47,7 @@ export const useWatchedChannels = (client, changeChannel) => {
   
         setUnreadChannels([..._unreadChannels]);
         setReadChannels([..._readChannels]);
-        setOneOnOneConversations([...oneOnOneConversations]);
+        setOneOnOneConversations([..._oneOnOneConversations]);
   
         if(channels.length === options.limit) {
           fetchChannels();

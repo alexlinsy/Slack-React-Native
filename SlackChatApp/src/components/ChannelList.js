@@ -21,7 +21,7 @@ function ChannelList({client, changeChannel}) {
     oneOnOneConversations,
   } = useWatchedChannels(client, changeChannel);
 
-  const renderChannelRow = (client, isUnread) => {
+  const renderChannelRow = (channel, isUnread) => {
     const isOneOnOneConversation = Object.keys(channel.state.members).length === 2;
     return (
       <ChannelListItem
@@ -64,7 +64,7 @@ function ChannelList({client, changeChannel}) {
                 data: readChannels || [],
             },
             {
-                title: 'Direct Message',
+                title: 'Direct Messages',
                 data: oneOnOneConversations || [],
             },
           ]}
