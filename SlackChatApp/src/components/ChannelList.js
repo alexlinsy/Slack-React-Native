@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {
   View, 
   Text,
@@ -8,80 +8,35 @@ import {
   SectionList,
 } from 'react-native';
 
-const useWatchedChannels = (client, changeChannel) => {
-  const [activeChannelId, setActiveChannelId] = useState(null);
-  const [unreadChannels, setUnreadChannels] = useState([]);
-  const [readChannels, setReadChannels] = useState([]);
-  const [oneOnOneConversations, setOneOnOneConversations] = useState(true);
-  const [hasMoreChannels, setHasMoreChannels] = useState(true);
-  
-  const filters={
-    type: 'messaging',
-    example: 'slack-demo',
-    members: {
-      $in: [client.user.id]
-    }
-  };
+import {ChannelListItem} from './ChannelListItem';
 
-  const sort = {has_unread: -1, cid: -1};
-  const options = {limit: 30, state: true};
+import {useWatchedChannels} from '../customHooks/useWatchedChannels';
 
-  useEffect(() => {
-    if(!hasMoreChannels) {
-      return;
-    }
-
-    let offset = 0;
-    const _unreadChannels = [];
-    const _readChannels = [];
-    const _oneOnOneConversations = [];
-
-    async function fetchChannels() {
-      const channels = await client.queryChannels(filters, sort, {
-        ...options,
-        offset,
-      });
-
-      offset = offset + channels.length;
-      channels.forEacch(c => {
-        if(c.countUnread() > 0) {
-          _unreadChannels.push(c);
-        } else if(Object.keys(c.state.members).length === 2) {
-          _oneOnOneConversations.push(c);
-        } else {
-          _readChannels.push(c);
-        }
-      });
-
-      setUnreadChannels([..._unreadChannels]);
-      setReadChannels([..._readChannels]);
-      setOneOnOneConversations([...oneOnOneConversations]);
-
-      if(channels.length === options.limit) {
-        fetchChannels();
-      } else {
-        setHasMoreChannels(false);
-        setActiveChannelId(_readChannels[0].id);
-        changeChannel(_readChannels[0].id);
-      }
-    }
-    fetchChannels();
-  }, [client]);
-
-  return {
+function ChannelList({client, changeChannel}) {
+  const {
     activeChannelId,
     setActiveChannelId,
     unreadChannels,
-    setUnreadChannels,
     readChannels,
-    setReadChannels,
     oneOnOneConversations,
-    setOneOnOneConversations,
-  };
-};
+  } = useWatchedChannels(client, changeChannel);
 
-function ChannelList() {
-  const renderChannelListItem = (item) => <Text>{item}</Text>;
+  const renderChannelRow = (client, isUnread) => {
+    const isOneOnOneConversation = Object.keys(channel.state.members).length === 2;
+    return (
+      <ChannelListItem
+        activeChannelId={activeChannelId}
+        setActiveChannelId={setActiveChannelId}
+        changeChannel={changeChannel}
+        isOneOnOneConversation={isOneOnOneConversation}
+        isUnread={isUnread}
+        channel={channel}
+        client={client}
+        key={channel.id}
+        currentUserId={client.user.id}
+      />
+    );
+  };
   
   return (
     <SafeAreaView>
@@ -101,20 +56,21 @@ function ChannelList() {
           sections={[
             {
                title: 'Unread',
-               data: [],
+               id: 'unread',
+               data: unreadChannels || [],
             },
             {
                 title: 'Channels',
-                data: [],
+                data: readChannels || [],
             },
             {
                 title: 'Direct Message',
-                data: [],
+                data: oneOnOneConversations || [],
             },
           ]}
-          keyExtractor={(item, index) => item + index}
+          keyExtractor={(item, index) => item.id + index}
           renderItem={({item, section}) => {
-            return renderChannelListItem(item);
+            return renderChannelRow(item, section.id === 'unread');
           }}
           renderSectionHeader={({section: {title}}) => (
             <View style={styles.groupTitleContainer}>
