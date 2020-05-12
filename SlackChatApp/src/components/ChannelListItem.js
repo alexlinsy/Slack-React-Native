@@ -38,9 +38,9 @@ export function ChannelListItem({
     // If its a oneOnOneConversation, then we need to display the name of the other user.
     // For this purpose, we need to find out, among two members of this channel,
     // which one is current user and which one is the other one.
-    const memberIds = Object.keys(channel.state.member);
+    const memberIds = Object.keys(channel.state.members);
     otherUserId = memberIds[0] === currentUserId ? memberIds[1] : memberIds[0];
-    ChannelPrefix = channel.state.members[otherUserId].user.online? (
+    ChannelPrefix = channel.state.members[otherUserId].user.online ? (
       <PresenceIndicator online={true} />
     ) : (
       <PresenceIndicator online={false} />
@@ -64,12 +64,12 @@ export function ChannelListItem({
     <TouchableOpacity
        key={channel.id}
        onPress={() => {
-           setActiveChannelId(channel.id);
-           changeChannel(channel.id);
+          setActiveChannelId(channel.id);
+          changeChannel(channel.id);
        }}
        style={{
-           ...styles.channelRow,
-           backgroundColor: activeChannelId === channel.id ? '#0676db' : undefined
+          ...styles.channelRow,
+          backgroundColor: activeChannelId === channel.id ? '#0676db' : undefined
        }}
     >
       <View style={styles.channelTitileContainer}>
@@ -95,7 +95,7 @@ const textStyles = {
   fontSize: 18
 };
 
-StyleSheet.create({
+const styles = StyleSheet.create({
   onlineCircle: {
     width: 10,
     height: 10,
