@@ -68,10 +68,70 @@ export const useWatchedChannels = (client, changeChannel) => {
           const channelReadIndex = readChannels.findIndex(
             (channel) => channel.cid === cid,
           );
+          
+          if(channelReadIndex >= 0) {
+            const channel = readChannels[channelReadIndex];
+            readChannels.splice(channelReadIndex, 1);
+            setReadChannels([...readChannels]);
+            setUnreadChannels([channel, ...unreadChannels]);
+          }
+          // Check if the channel (which received new message) exists in oneOnOneConversations list.
+          const oneOnOneConversationsIndex = oneOnOneConversations.findIndex(
+            (channel) => channel.cid === cid
+          );
+          if(oneOnOneConversationsIndex >= 0) {
+            // If yes, then remove it from oneOnOneConversations list and add it to unreadChannels list
+            const channel = oneOnOneConversations[oneOnOneConversationsIndex];
+            oneOnOneConversations.splice(oneOnOneConversationsIndex, 1);
+            setOneOnOneConversations([...oneOnOneConversations]);
+            setUnreadChannels([channel, ...unreadChannels]);
+          }
 
+          // Check if the channel (which received new message) already exists in unreadChannels.
+          const chaneelUnreadIndex = unreadChannels.findIndex(
+            (channel) => channel.cid === cid,
+          );
+          if(channelUnreadIndex >= 0) {
+            const channel = unreadChannels[channelUnreadIndex];
+            unreadChannels.splice(channelUnreadIndex, 1);
+            setReadChannels([...readChannels]);
+            setUnreadChannels([channel, ...unreadChannels]);
+          }
+        }
+
+        if(e.type === 'message.read') {
+          if(e.user.id !== client.user.id) {
+            return;
+          }
+          const cid = e.cid;
+          //get channel index
+          const channelIndex = unreadChannels.findIndex(
+            (channel) => channel.cid === cid
+          );
+          if(channelIndex < 0) {
+            return;
+          }
+
+          //get channel from channels
+          const channel = unreadChannels[channelIndex];
+          
+          unreadChannels.splice(channelIndex, 1);
+          setUnreadChannels([...unreadChannels]);
+
+          if(Object.keys(channel.state.member).length === 2) {
+            setOneOnOneConversations([channel, ...oneOnOneConversations]);
+          } else {
+            setReadChannels([channel, ...readChannels]);
+          }
         }
       }
-    })
+
+      client.on(handleEvents);
+
+      return () => {
+        client.off(handleEvents);
+      };
+    }, [client, readChannels, unreadChannels, oneOnOneConversations]);
   
     return {
       activeChannelId,
