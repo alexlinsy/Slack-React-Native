@@ -59,6 +59,19 @@ export const useWatchedChannels = (client, changeChannel) => {
       }
       fetchChannels();
     }, [client]);
+
+    useEffect(() => {
+      function handleEvents(e) {
+        if(e.type === 'message.new') {
+          const cid = e.cid;
+          // Check if the channel (which received new message) exists in group channels.
+          const channelReadIndex = readChannels.findIndex(
+            (channel) => channel.cid === cid,
+          );
+
+        }
+      }
+    })
   
     return {
       activeChannelId,
