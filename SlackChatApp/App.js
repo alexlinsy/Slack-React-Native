@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
   View,
-  Text,
 } from 'react-native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
 import ChannelList from './src/components/ChannelList';
 import {StreamChat} from 'stream-chat';
+import {ChannelHeader} from './src/components/ChannelHeader';
 
 const chatClient = new StreamChat('q95x9hkbyd6p');
 const userToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidmlzaGFsIn0.LpDqH6U8V8Qg9sqGjz0bMQvOfWrWKAjPKqeODYM0Elk';
@@ -19,12 +19,29 @@ const user = {
 
 chatClient.setUser(user, userToken);
 
+function ChannelScreen({navigation, route}) {
+  const [channel, setChannel] = useState(null);
+  useEffect(() => {
+    if(!channel) {
+      navigation.openDrawer();
+    }
+    const channelId = route.params ? route.params.channelId : null;
+    const _channel = chatClient.channel('messaging', channelId);
+    setChannel(_channel);
+  }, [route.params])
 
-const ChannelScreen = ({navigation, route}) => (
-  <SafeAreaView>
-      <Text>Channel Screen</Text>
+  return (
+    <SafeAreaView style={styles.channelScreenSaveAreaView}>
+      <View style={styles.channelScreenContainer}>
+        <ChannelHeader 
+          navigation={navigation}
+          channel={channel}
+          client={chatClient}
+        />
+      </View>
     </SafeAreaView>
-);
+  );
+}
 
 const ChannelListDrawer = props => (
   <ChannelList 
