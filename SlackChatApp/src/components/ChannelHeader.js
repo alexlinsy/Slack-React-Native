@@ -1,6 +1,6 @@
 import React from 'react';
 import {TouchableOpacity, View, Text, Image, StyleSheet} from 'react-native';
-import iconSearch from '..images/icon-search.png';
+import iconSearch from '../images/icon-search.png';
 import iconThreeDots from '../images/icon-3-dots.png';
 
 export const ChannelHeader = ({navigation, channel, client}) => {

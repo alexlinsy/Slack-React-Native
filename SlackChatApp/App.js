@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -9,6 +9,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import ChannelList from './src/components/ChannelList';
 import {StreamChat} from 'stream-chat';
 import {ChannelHeader} from './src/components/ChannelHeader';
+import { Chat, Channel, MessageList, MessageInput } from 'stream-chat-react-native';
 
 const chatClient = new StreamChat('q95x9hkbyd6p');
 const userToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidmlzaGFsIn0.LpDqH6U8V8Qg9sqGjz0bMQvOfWrWKAjPKqeODYM0Elk';
@@ -38,6 +39,14 @@ function ChannelScreen({navigation, route}) {
           channel={channel}
           client={chatClient}
         />
+        <View style={styles.chatContainer}>
+          <Chat client={chatClient}>
+            <Channel channel={channel}>
+              <MessageList />
+              <MessageInput />
+            </Channel>
+          </Chat>
+        </View>
       </View>
     </SafeAreaView>
   );
