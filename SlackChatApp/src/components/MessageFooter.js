@@ -1,78 +1,54 @@
 import React from 'react';
-import {
-  ReactionPickerWrapper
-} from 'stream-chat-react-native';
-import {
-  StyleSheet,
-  Image,
-  View,
-  TouchableOpacity,
-  Text
-} from 'react-native';
+import {ReactionPickerWrapper} from 'stream-chat-react-native';
+import {StyleSheet, Image, View, TouchableOpacity, Text} from 'react-native';
 import iconEmotion from '../images/icon-emotion.png';
 
-export const MessageFooter = props => ( <
-  View style = {
-    styles.reactionListContainer
-  } > {
-    props.message.latest_reactions &&
-    props.message.latest_reactions.length > 0 &&
-    renderReactions(
-      props.message.latest_reactions,
-      props.supportedReactions,
-      props.message.reaction_counts,
-      props.handleReaction
-    )
-  } <
-  ReactionPickerWrapper {
-    ...props
-  }
-  offset = {
-    {
-      left: -70,
-      top: 10
-    }
-  } >
-  {
-    props,
-    message,
-    latest_reactions &&
-    props.message.latest_reactions.length > 0 && ( <
-      View style = {
-        styles.reactionPickerContainer
-      } >
-      <
-      Image source = {
-        iconEmotion
-      }
-      style = {
-        styles.reactionPickerIcon
-      }
-      /> <
-      /View>
-    )
-  } <
-  /ReactionPickerWrapper> <
-  /View>
+export const MessageFooter = props => (
+  <View style={styles.reactionListContainer}>
+    {' '}
+    {props.message.latest_reactions &&
+      props.message.latest_reactions.length > 0 &&
+      renderReactions(
+        props.message.latest_reactions,
+        props.supportedReactions,
+        props.message.reaction_counts,
+        props.handleReaction,
+      )}{' '}
+    <ReactionPickerWrapper
+      {...props}
+      offset={{
+        left: -70,
+        top: 10,
+      }}>
+      {
+        (props,
+        message,
+        latest_reactions && props.message.latest_reactions.length > 0 && (
+          <View style={styles.reactionPickerContainer}>
+            <Image source={iconEmotion} style={styles.reactionPickerIcon} />{' '}
+          </View>
+        ))
+      }{' '}
+    </ReactionPickerWrapper>{' '}
+  </View>
 );
 
 export const renderReactions = (
   reactions,
   supportedReactions,
   reactionCounts,
-  handleReaction
+  handleReaction,
 ) => {
-  const reactionByType = {}
+  const reactionByType = {};
   reactions &&
     reactions.forEach(item => {
       if (reactions[item.type] === undefined) {
-        return (reactionByType[item.type] = [item])
+        return (reactionByType[item.type] = [item]);
       } else {
-        return (
-          reactionByType[item.type] = [
-            ...reactionByType[item.type],
-            item
-          ]);
+        return (reactionByType[item.type] = [
+          ...reactionByType[item.type],
+          item,
+        ]);
       }
     });
 
@@ -81,24 +57,15 @@ export const renderReactions = (
 
   const reactionTypes = supportedReactions.map(e => e.id);
   return Object.keys(reactionByType).map((type, index) =>
-    reactionTypes.indexOf(type) > -1 ? ( <
-      ReactionItem key = {
-        index
-      }
-      type = {
-        type
-      }
-      handleReaction = {
-        handleReaction
-      }
-      reactionCounts = {
-        reactionCounts
-      }
-      emojiDataType = {
-        emojiDataType
-      }
+    reactionTypes.indexOf(type) > -1 ? (
+      <ReactionItem
+        key={index}
+        type={type}
+        handleReaction={handleReaction}
+        reactionCounts={reactionCounts}
+        emojiDataType={emojiDataType}
       />
-    ) : null
+    ) : null,
   );
 };
 
@@ -106,30 +73,20 @@ const ReactionItem = ({
   type,
   handleReaction,
   reactionCounts,
-  emojiDataType
+  emojiDataType,
 }) => {
-  return ( <
-    TouchableOpacity onPress = {
-      () => {
+  return (
+    <TouchableOpacity
+      onPress={() => {
         handleReaction(type);
-      }
-    }
-    key = {
-      type
-    }
-    style = {
-      styles / reactionItemContainer
-    } >
-    <
-    Text style = {
-      styles.reactionItem
-    } > {
-      emojiDataType[type].icon
-    } {
-      reactionCounts[type]
-    } <
-    /Text> <
-    /TouchableOpacity>
+      }}
+      key={type}
+      style={styles / reactionItemContainer}>
+      <Text style={styles.reactionItem}>
+        {' '}
+        {emojiDataType[type].icon} {reactionCounts[type]}{' '}
+      </Text>{' '}
+    </TouchableOpacity>
   );
 };
 
