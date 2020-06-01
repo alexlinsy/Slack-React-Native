@@ -5,21 +5,18 @@ import iconThreeDots from '../images/icon-3-dots.png';
 
 export const ChannelHeader = ({navigation, channel, client}) => {
   let channelTitle = '#channel_name';
-  
   //For normal group channel/conversation, its channel name as displaly title
-  if(channel && channel.data && channel.data.name) {
+  if (channel && channel.data && channel.data.name) {
     channelTitle = '#' + channel.data.name.toLowerCase().replace(' ', '_');
   }
 
-  const memberIds = 
+  const memberIds =
     channel && channel.state ? Object.keys(channel.state.members) : [];
-  
   //Check if its oneOneOneConversation.
-  if(channel && memberIds.length === 2) {
+  if (channel && memberIds.length === 2) {
     // If yes, then use name of other user in conversation as channel display title.
     const otherUserId =
-      memberIds[0] === client.user.id ? memberIds[1] : memberIds[0]
-    
+      memberIds[0] === client.user.id ? memberIds[1] : memberIds[0];
     channelTitle = channel.state.members[otherUserId].user.name;
   }
 
@@ -29,20 +26,19 @@ export const ChannelHeader = ({navigation, channel, client}) => {
         <TouchableOpacity
           onPress={() => {
             navigation.openDrawer();
-          }}
-        >
-          <Text style={styles.hamburgerIcon}>☰</Text>
-        </TouchableOpacity>
-        <Text style={styles.channelTitle}> {channelTitle} </Text>
-      </View>
+          }}>
+          <Text style={styles.hamburgerIcon}> ☰ </Text>{' '}
+        </TouchableOpacity>{' '}
+        <Text style={styles.channelTitle}> {channelTitle} </Text>{' '}
+      </View>{' '}
       <View style={styles.rightContent}>
         <TouchableOpacity style={styles.searchIconContainer}>
-          <Image source={iconSearch} style={styles.searchIcon} />
-        </TouchableOpacity>
+          <Image source={iconSearch} style={styles.searchIcon} />{' '}
+        </TouchableOpacity>{' '}
         <TouchableOpacity style={styles.menuIconContainer}>
-          <Image source={iconThreeDots} style={styles.menuIcon} />
-        </TouchableOpacity>
-      </View>
+          <Image source={iconThreeDots} style={styles.menuIcon} />{' '}
+        </TouchableOpacity>{' '}
+      </View>{' '}
     </View>
   );
 };
@@ -54,20 +50,20 @@ export const styles = StyleSheet.create({
     backgroundColor: 'white',
     justifyContent: 'space-between',
     borderBottomWidth: 0.5,
-    borderBottomColor: 'grey'
+    borderBottomColor: 'grey',
   },
   leftContent: {
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   hamburgerIcon: {
-    fontSize: 27
+    fontSize: 27,
   },
   channelTitle: {
     color: 'black',
     marginLeft: 10,
     fontWeight: '900',
     fontSize: 17,
-    fontFamily: 'Lato-Regular'
+    fontFamily: 'Lato-Regular',
   },
   rightContent: {
     flexDirection: 'row',
@@ -75,17 +71,17 @@ export const styles = StyleSheet.create({
   },
   searchIconContainer: {
     marginRight: 15,
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   searchIcon: {
     height: 18,
-    width: 18
+    width: 18,
   },
   menuIcon: {
     height: 18,
-    width: 18
+    width: 18,
   },
   menuIconContainer: {
-    alignSelf: 'center'
-  }
+    alignSelf: 'center',
+  },
 });

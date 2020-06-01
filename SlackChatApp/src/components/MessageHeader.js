@@ -1,30 +1,30 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import Moment from 'moment';
-import { styles } from './ChannelHeader';
+import {styles} from './ChannelHeader';
 
 export const MessageHeader = props => {
   return (
     <View style={styles.column}>
-      {props.message.attachments.length > 0 &&(
+      {' '}
+      {props.message.attachments.length > 0 && (
         <View style={styles.header}>
-          <MessageUserBar {...props}/>
+          <MessageUserBar {...props} />{' '}
         </View>
-      )}
+      )}{' '}
     </View>
   );
 };
 
 export const MessageUserBar = ({groupStyles, message}) => {
-  if(groupStyles[0] === 'single' || groupStyles[0] ==='top') {
+  if (groupStyles[0] === 'single' || groupStyles[0] === 'top') {
     return (
       <View style={styles.userBar}>
-        <Text style={styles.messageUserName}>
-          {message.user.name}
-        </Text>
+        <Text style={styles.messageUserName}> {message.user.name} </Text>{' '}
         <Text style={styles.messageDate}>
-          {Moment(message.created_at).format('hh:ss A')}
-        </Text>
+          {' '}
+          {Moment(message.created_at).format('hh:ss A')}{' '}
+        </Text>{' '}
       </View>
     );
   }
@@ -33,25 +33,25 @@ export const MessageUserBar = ({groupStyles, message}) => {
 
 const styles = StyleSheet.create({
   column: {
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
   header: {
-    paddingLeft: 0
+    paddingLeft: 0,
   },
   userBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 5
+    marginBottom: 5,
   },
   messageUserName: {
     fontWeight: '900',
     color: 'black',
     fontSize: 15,
-    fontFamily: 'Lato-Bold'
+    fontFamily: 'Lato-Bold',
   },
   messageDate: {
     color: 'grey',
     marginLeft: 6,
-    fontSize: 10
-  }
+    fontSize: 10,
+  },
 });
