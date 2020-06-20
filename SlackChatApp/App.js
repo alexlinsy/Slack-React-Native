@@ -1,18 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  View,
-} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {SafeAreaView, StyleSheet, View} from 'react-native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
 import ChannelList from './src/components/ChannelList';
 import {StreamChat} from 'stream-chat';
 import {ChannelHeader} from './src/components/ChannelHeader';
-import { Chat, Channel, MessageList, MessageInput } from 'stream-chat-react-native';
+import {
+  Chat,
+  Channel,
+  MessageList,
+  MessageInput,
+} from 'stream-chat-react-native';
+import {DateSeparator} from './src/components/DateSeperator';
+import {MessageSlack} from './src/components/MessageSlack';
 
 const chatClient = new StreamChat('q95x9hkbyd6p');
-const userToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidmlzaGFsIn0.LpDqH6U8V8Qg9sqGjz0bMQvOfWrWKAjPKqeODYM0Elk';
+const userToken =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidmlzaGFsIn0.LpDqH6U8V8Qg9sqGjz0bMQvOfWrWKAjPKqeODYM0Elk';
 const user = {
   id: 'vishal',
   name: 'Vishal',
@@ -23,18 +27,18 @@ chatClient.setUser(user, userToken);
 function ChannelScreen({navigation, route}) {
   const [channel, setChannel] = useState(null);
   useEffect(() => {
-    if(!channel) {
+    if (!channel) {
       navigation.openDrawer();
     }
     const channelId = route.params ? route.params.channelId : null;
     const _channel = chatClient.channel('messaging', channelId);
     setChannel(_channel);
-  }, [route.params])
+  }, [route.params]);
 
   return (
     <SafeAreaView style={styles.channelScreenSaveAreaView}>
       <View style={styles.channelScreenContainer}>
-        <ChannelHeader 
+        <ChannelHeader
           navigation={navigation}
           channel={channel}
           client={chatClient}
@@ -42,7 +46,10 @@ function ChannelScreen({navigation, route}) {
         <View style={styles.chatContainer}>
           <Chat client={chatClient}>
             <Channel channel={channel}>
-              <MessageList />
+              <MessageList
+                Message={MessageSlack}
+                DateSeparator={DateSeparator}
+              />
               <MessageInput />
             </Channel>
           </Chat>
@@ -53,11 +60,11 @@ function ChannelScreen({navigation, route}) {
 }
 
 const ChannelListDrawer = props => (
-  <ChannelList 
+  <ChannelList
     client={chatClient}
     changeChannel={channelId => {
       props.navigation.jumpTo('ChannelScreen', {
-        channelId
+        channelId,
       });
     }}
   />
@@ -70,21 +77,20 @@ const App = () => (
     <View style={styles.container}>
       <Drawer.Navigator
         drawerContent={ChannelListDrawer}
-        drawerStyle={styles.drawerNavigator}
-      >
+        drawerStyle={styles.drawerNavigator}>
         <Drawer.Screen name="ChannelScreen" component={ChannelScreen} />
       </Drawer.Navigator>
     </View>
   </NavigationContainer>
-)
+);
 
 const styles = StyleSheet.create({
   channelScreenSaveAreaView: {
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   channelScreenContainer: {
-    flexDirection:'column',
-    height: '100%'
+    flexDirection: 'column',
+    height: '100%',
   },
   container: {
     flex: 1,
@@ -96,8 +102,8 @@ const styles = StyleSheet.create({
   chatContainer: {
     backgroundColor: 'white',
     flexGrow: 1,
-    flexShrink: 1
-  }
+    flexShrink: 1,
+  },
 });
 
 export default App;
